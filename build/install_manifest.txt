@@ -1,0 +1,9 @@
+/usr/local/lib/cmake/rfml/rfmlConfig.cmake
+/usr/local/include/rfml/api.h
+/usr/local/lib/python3/dist-packages/rfml/__init__.py
+/usr/local/lib/python3/dist-packages/rfml/dnn_onnx_sync.py
+/usr/local/lib/python3/dist-packages/rfml/__init__.pyc
+/usr/local/lib/python3/dist-packages/rfml/dnn_onnx_sync.pyc
+/usr/local/lib/python3/dist-packages/rfml/__init__.pyo
+/usr/local/lib/python3/dist-packages/rfml/dnn_onnx_sync.pyo
+/usr/local/share/gnuradio/grc/blocks/rfml_dnn_onnx_sync.block.yml
