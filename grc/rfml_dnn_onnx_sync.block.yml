@@ -1,0 +1,74 @@
+id: rfml_dnn_onnx_sync
+label: dnn_onnx_sync
+category: '[rfml]'
+
+templates:
+  imports: import rfml
+  make: rfml.dnn_onnx_sync(${onnx_model_file}, ${input_transform_file}, ${onnx_batch_size}, ${onnx_runtime_device}, ${input_transform}, ${input_type}, ${output_transform}, ${in_size}, ${out_size})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+parameters: 
+- id: onnx_model_file  
+  label: ONNX model file  
+  dtype: file_open
+- id: input_transform_file
+  label: Input transform file
+  dtype: file_open  
+- id: onnx_batch_size  
+  label: Batch size  
+  dtype: int  
+  default: '1' 
+- id: in_size  
+  label: Input size  
+  dtype: int 
+- id: out_size  
+  label: Output size  
+  dtype: int 
+- id: onnx_runtime_device  
+  label: Device  
+  dtype: string  
+  default: 'GPU'  
+  options: ['CPU', 'GPU']
+- id: input_transform
+  label: Input Transform
+  dtype: string
+  default: 'RFML'
+  options: ['RFML', 'Image', 'Custom']
+- id: input_type
+  label: Input Type
+  dtype: string
+  default: 'float'
+  options: ['float', 'complex']
+- id: output_transform
+  label: Output Transform
+  dtype: string
+  default: 'Default'
+  options: ['Default', 'Softmax']
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: in0
+  # domain: ...
+  dtype: ${input_type}
+  vlen: ${in_size}
+
+outputs:
+- label: out
+  # domain:
+  dtype: float
+  vlen: ${out_size}
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1
+
