@@ -30,16 +30,10 @@ import cv2
 import scipy.signal
 from scipy.special import softmax
 import sys
-#sys.path.append("/home/rutgersuniversity/USRPCapstone/")
-#from trans import _transform
 import importlib
 import importlib.util
 
 class dnn_onnx_sync(gr.sync_block):
-    """
-    docstring for block dnn_onnx_sync
-    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
-    """
 
     INPUT_TYPES = {
         'float':  np.float32,
@@ -49,11 +43,11 @@ class dnn_onnx_sync(gr.sync_block):
     def __init__(self, onnx_model_file, input_transform_file, onnx_batch_size, onnx_runtime_device, input_transform, input_type, output_transform, in_size, out_size):
         gr.sync_block.__init__(self, name="dnn_onnx_sync", in_sig=[(self.INPUT_TYPES[input_type], in_size)], out_sig=[(np.float32, out_size)])
 
-        sys.path.append("/home/rutgersuniversity/USRPCapstone/")
         self.session = ort.InferenceSession(onnx_model_file, None)
         self.backend = backend.prepare(self.session)
         self.input_transform = input_transform
         self.output_transform = output_transform
+        self.input_transform_file = input_transform_file
 
     def _transformone(self, input_data):
         return np.hstack((np.real(input_data).reshape(128,1), np.imag(input_data).reshape(128,1))).reshape(1,128,2)
@@ -85,16 +79,12 @@ class dnn_onnx_sync(gr.sync_block):
 
     def work(self, input_items, output_items):
         """example: multiply with constant"""
-        #importlib.import_module(i
-        spec = importlib.util.spec_from_file_location("trans", "/home/rutgersuniversity/USRPCapstone/trans.py")
+        spec = importlib.util.spec_from_file_location("trans", self.input_transform_file)
         m = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(m)
         for i in range(0, np.shape(input_items)[1]):
             transformed_input = getattr(self, self.INPUT_TRANSFORM[self.input_transform], m._transform)(input_items[0][i])
             #transformed_input = self._transformtwo(input_items[0][i])
-            #print(np.shape(transformed_input))
             output_items[0][i] = getattr(self, self.OUTPUT_TRANSFORM[self.output_transform])(transformed_input)
-            #print(output_items[0][i])
-            #print(np.argmax(output_items[0][i]))
         	
         return len(output_items[0])
